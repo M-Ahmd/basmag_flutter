@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/adding.dart';
 import 'package:http/http.dart' as http;
 
 class Todos extends StatefulWidget {
@@ -25,7 +26,7 @@ class _TodosState extends State<Todos> {
       setState(() {
         todos = jsonDecode(res.body);
       });
-    }else {
+    } else {
       print("Error: ${res.statusCode}");
     }
   }
@@ -43,7 +44,20 @@ class _TodosState extends State<Todos> {
         backgroundColor: Colors.blue,
         title: Text(widget.token.toString()),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){},child: Icon(Icons.add, color: Colors.blue,),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          var res = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Adding(token: widget.token),
+            ),
+          );
+          if (res) {
+            getTodos();
+          }
+        },
+        child: Icon(Icons.add, color: Colors.blue),
+      ),
       body: ListView.builder(
         itemCount: todos.length,
         itemBuilder: (context, index) {
